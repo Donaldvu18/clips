@@ -29,10 +29,22 @@ class OrderDetails extends Component{
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
         const gatotal=parseFloat(values.GA)*parseFloat(values.price_ga)
-        const srototal=parseFloat(values.SRO)*parseFloat(values.price_sro)
-        const disc=values.showDiscount===true ? parseFloat(values.discount):0
-        const subtotal=parseFloat(gatotal)+parseFloat(srototal)+parseFloat(deliveryfee)-disc
-        const graybutton=values.discount==='' || values.discount==="0" || values.discount===null? "disabled":null
+        const totalSRO=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.SRO)).reduce((sum,current)=>sum+current)*values.price_sro:0
+        const totalGA=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*values.price_ga:0
+
+        const disc=values.showDiscount===true && values.suite.length>0? parseFloat(values.discount):0
+        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc
+        const price_prediscount=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)
+        const graybutton=values.discount==='' || values.discount==="0" || values.discount===null || parseFloat(values.discount)>price_prediscount? "disabled":null
+        
+        const pricemap=values.rowSeat.map(order=>{return(<React.Fragment>
+                                                            <p id='price_summary'>({order.name}) GA : ${values.price_ga} x {order.GA} = ${parseFloat(values.price_ga)*parseFloat(order.GA)}</p>            
+                                                            <p id='price_summary'>({order.name}) SRO : ${values.price_sro} x {order.SRO} = ${parseFloat(values.price_sro)*parseFloat(order.SRO)}</p>
+                                                            
+                                                            </React.Fragment>)})
+
+       
+        console.log(totalSRO)
         return(
             <MuiThemeProvider>
             <div className='container p-0'>
@@ -240,13 +252,14 @@ class OrderDetails extends Component{
                     <p><span id='summarylabels'>GA: </span>{values.GA}</p>
                     <p><span id='summarylabels'>SRO's Purchased: </span>{values.SRO}</p>
                     <p><span id='summarylabels'>Price Breakdown: </span></p>
-                        <div id='price_container'> 
-                    {values.GA!==null && values.price_GA!==null ? <p id='price_summary'>GA: {values.GA} x ${values.price_ga} = ${gatotal}</p>:null}
-                    {values.SRO!==null && values.price_sro!==null ? <p id='price_summary'>SRO: {values.SRO} x ${values.price_sro} = ${srototal}</p>:null}
-                    {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee: $25</p>:null}
-                    {values.showDiscount===true ? <p id='discount'>- Discount: ${parseFloat(values.discount)}</p>:null}
-                    {values.SRO!==null && values.GA!==null? <hr/>:null}
-                    {values.SRO!==null && values.GA!==null?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null}
+                       <div id='price_container'>
+                        {values.rowSeat.length>0 ? <React.Fragment>{pricemap}</React.Fragment>:null}
+                    {/* {values.GA!==null && values.price_GA!==null ? <p id='price_summary'>GA: {values.GA} x ${values.price_ga} = ${gatotal}</p>:null} */}
+                    {/* {values.SRO!==null && values.price_sro!==null ? <p id='price_summary'>SRO: {values.SRO} x ${values.price_sro} = ${srototal}</p>:null} */}
+                    {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee = $25</p>:null}
+                    {values.showDiscount===true ? <p id='discount'>- Discount = ${parseFloat(values.discount)}</p>:null}
+                    {values.rowSeat.length>0? <hr/>:null} 
+                    {values.rowSeat.length>0?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null} 
                         </div>
                 </div>
                 <br/>
@@ -257,13 +270,19 @@ class OrderDetails extends Component{
                     <h2>Discounts:</h2>
                     <br/>
                     <label for="quantity">Amount:</label><br/>
-                    $ <input defaultValue={values.discount} type="number" id="quantity" name="discount" className='mb-2' max='99' onChange={handleChange('discount')}></input>
+                    $ {subtotal>0 && values.suite.length>0? <input defaultValue={values.discount} min="0" type="number" id="quantity" name="discount" className='mb-2' max='99' onChange={handleChange('discount')}></input>:
+                    <input defaultValue={values.discount} disabled min="0" type="number" id="quantity" name="discount" className='mb-2' max='99' onChange={handleChange('discount')}></input>}
                     <br/>
                     <label>Discount description:</label><br/>
-                    <textarea defaultValue={values.discount_comment} id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>
+                    
+                    {graybutton==='disabled'?<textarea defaultValue={values.discount_comment} disabled id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>:
+                    <textarea defaultValue={values.discount_comment} id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>}
                     <br/>
                     {graybutton==='disabled'? <button className='' disabled onClick={confirmDiscounts} type="button">Apply</button> :
                      <button className=''  onClick={confirmDiscounts} type="button">Apply</button>}
+
+
+                     {parseFloat(values.discount)>price_prediscount && values.suite.length>0? <p id='disc_error' className='mt-2'>Discount cannot exceed total price.</p>:null}
                     {values.showDiscount===true ? <p className='mt-2'>Discount has been applied.</p>:null}
                 </div>
                 <br/>      

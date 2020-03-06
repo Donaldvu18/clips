@@ -117,11 +117,17 @@ class OrderForm extends Component{
       handleSuite=input=>e=>{
         if(this.state.suite.includes(e.target.value)){
             const suite_without=this.state.suite.filter(suite=>suite!==e.target.value)
+            if(suite_without.length===0){
+              this.setState({showDiscount:false})
+            }
             this.setState({suite:suite_without})
             this.setState({rowSeat:this.state.rowSeat.filter(obj=>obj.name!==e.target.value)})
+            // this.setState({rowSeat:[...this.state.rowSeat,{'name':e.target.value,'GA':e.target.getAttribute('gan'),'SRO':'0'}]})
           }else{
           this.setState({suite:[...this.state.suite,e.target.value]})
+          this.setState({rowSeat:[...this.state.rowSeat,{'name':e.target.value,'GA':e.target.getAttribute('gan'),'SRO':'0'}]})
           }
+    
       }
       handleGAandChange=input=>e=>{
           // this.handleGA(e)
@@ -132,12 +138,13 @@ class OrderForm extends Component{
           // this.setState({suite:[...this.state.suite,e.target.value]})
           // }
   
-          // if(this.state.suite.includes(e.target.suitename)){
+          if(this.state.suite.includes(e.target.getAttribute('suitename'))){
             // const newrowSeat=this.state.rowSeat.filter(obj=>obj.name!==e.target.suitename)
             // this.setState({rowSeat:newrowSeat})
-          // }else{
-          this.setState({rowSeat:[...this.state.rowSeat,{'name':e.target.getAttribute('suitename'),'GA':e.target.getAttribute('gan'),'SRO':e.target.value}]})
-          // }
+            this.setState({rowSeat:[...this.state.rowSeat.filter(obj=>obj.name!==e.target.getAttribute('suitename')),{'name':e.target.getAttribute('suitename'),'GA':e.target.getAttribute('gan'),'SRO':e.target.value}]})
+          }else{
+            this.setState({rowSeat:[...this.state.rowSeat,{'name':e.target.getAttribute('suitename'),'GA':e.target.getAttribute('gan'),'SRO':e.target.value}]})
+        }
       }
       
       handleGA=(e)=>{

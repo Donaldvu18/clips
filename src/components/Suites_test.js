@@ -17,7 +17,14 @@ const Suites_test = ({selected_suite,suite,rowSeat,handleChange,GA,SRO,hyde,hand
     const sro8=[...Array(9).keys()].map(num=>{
         return(<option value={num.toString()}>{num}</option>)
     })
-    
+    let ga_value=''
+    if(GA24_SRO20.includes(suite)){
+        ga_value='24'
+    }else if(GA20_SRO14.includes(suite)|| GAOther_2020.includes(suite)){
+        ga_value='20'
+    }else {
+        ga_value='12'
+    }
 
     return(
       
@@ -31,14 +38,14 @@ const Suites_test = ({selected_suite,suite,rowSeat,handleChange,GA,SRO,hyde,hand
                         {GA12_SRO8.includes(suite) ?  'General Admission: 12 ($100/per) /  Standing Room Capacity: 8 ($90/per) (Sold)' :null}
                         {GAOther_2020.includes(suite) ?'General Admission: 20 ($120/per) / Standing Room Capacity: 20 ($120/per) (Sold)' :null}</span></div>
                     :
-                    <div><input type="checkbox" onChange={handleSuite('suite')} gan='24' value={suite} name="suite"/> {suite}<span id='space'> </span>
+                    <div><input type="checkbox" onChange={handleSuite('suite')} gan={ga_value} value={suite} name="suite"/> {suite}<span id='space'> </span>
                         {GA24_SRO20.includes(suite) ? 'General Admission: 24 ($130/per) /  Standing Room Capacity: 20 ($120/per)' :null}
                         {GA20_SRO14.includes(suite) ? 'General Admission: 20 ($125/per) /  Standing Room Capacity: 14 ($110/per)' :null}
                         {GA12_SRO8.includes(suite) ?  'General Admission: 12 ($100/per) /  Standing Room Capacity: 8 ($90/per)' :null}
                         {GAOther_2020.includes(suite) ?'General Admission: 20 ($120/per) / Standing Room Capacity: 20 ($120/per)' :null}</div>
                 }
              {selected_suite.includes(suite) ?
-                <SROcomp suite={suite} SRO={SRO} handleGAandChange={handleGAandChange} rowSeat={rowSeat}/>:
+                <SROcomp suite={suite} GA={ga_value} SRO={SRO} handleGAandChange={handleGAandChange} rowSeat={rowSeat}/>:
                 null}
             </div>
                

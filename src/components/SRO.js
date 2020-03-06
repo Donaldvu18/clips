@@ -15,12 +15,13 @@ const SROcomp = ({suite,SRO,GA,rowSeat,handleGAandChange}) =>{
     const sro8=[...Array(9).keys()].map(num=>{
         return(<option value={num.toString()}>{num}</option>)
     })
-    
+
     return(
         <div>
+            
         <label id='buySRO'>
             # of Standing Room to Purchase? &nbsp;&nbsp;
-            <select value={SRO} onChange={handleGAandChange('SRO')} gan='24' suitename={suite}>
+            <select value={SRO} onChange={handleGAandChange('SRO')} gan={GA} suitename={suite}>
             {GA24_SRO20.includes(suite) ? sro20 :null}
             {GA20_SRO14.includes(suite) ? sro14 :null}
             {GA12_SRO8.includes(suite) ? sro8 :null}
