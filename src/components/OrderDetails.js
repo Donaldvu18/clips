@@ -173,7 +173,7 @@ class OrderDetails extends Component{
                 
                 <div id='ra'>
                     <h2>Rental Agreement</h2>
-                    <br/>
+                  
                     <label id='rabox'>
                         <select value={values.ra} onChange={handleChange('ra')}>
                             <option selected='selected' value={null}>-</option>
@@ -182,12 +182,12 @@ class OrderDetails extends Component{
                         </select>
                     </label>
                 </div>    
-                <br/>
+                
                 {/* Method of Delivery  */}
 
                 <div id='delivery'>
                     <h2>Method of Delivery</h2>
-                    <br/>
+               
                     <label id='deliverybox'>
                         <select value={values.delivery_method} onChange={handleChange('delivery_method')}>
                             <option selected='selected' value={null}>-</option>
@@ -202,7 +202,7 @@ class OrderDetails extends Component{
                 {/* Mailing Address if applicable  */}
                 {values.delivery_method==='Print' ?
                 <div id='delivery'>
-                    <h3>Mailing Address</h3>
+                    <h4>Mailing Address:</h4>
                         <TextField
                             hintText='Enter Billing Address'
                             floatingLabelText='Billing Address'
@@ -245,6 +245,7 @@ class OrderDetails extends Component{
                     {values.SRO!==null && values.price_sro!==null ? <p id='price_summary'>SRO: {values.SRO} x ${values.price_sro} = ${srototal}</p>:null}
                     {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee: $25</p>:null}
                     {values.showDiscount===true ? <p id='discount'>- Discount: ${parseFloat(values.discount)}</p>:null}
+                    {values.SRO!==null && values.GA!==null? <hr/>:null}
                     {values.SRO!==null && values.GA!==null?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null}
                         </div>
                 </div>

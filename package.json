@@ -6,9 +6,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
+    "material-ui": "^0.20.2",
     "react": "^16.13.0",
+    "react-credit-card-input": "^1.1.5",
+    "react-credit-cards": "^0.8.0",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "styled-components": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -16,6 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:5000/",
   "eslintConfig": {
     "extends": "react-app"
   },
