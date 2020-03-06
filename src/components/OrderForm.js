@@ -15,6 +15,7 @@ class OrderForm extends Component{
             rowSeat:[],
             showInfo:false,
             suite:[],
+            selected_suite:[],
             event:'a',
             account_number:969402314,
             phone_number:6173242332,
@@ -104,7 +105,7 @@ class OrderForm extends Component{
       }
       handleSROandRow=input=>e=>{
         // this.handleSRO(e)
-        console.log(e)
+     
         this.setState({[input]:e[0].target.value});
   
           // let temp=[2,e.target.value]
@@ -113,17 +114,30 @@ class OrderForm extends Component{
         
 
       }
-      handleSRO=input=>e=>{
-        this.setState({SRO:e.target.value})
-      }
-      handleGAandChange=input=>e=>{
-          this.handleGA(e)
-          if(this.state.suite.includes(e.target.value)){
+      handleSuite=input=>e=>{
+        if(this.state.suite.includes(e.target.value)){
             const suite_without=this.state.suite.filter(suite=>suite!==e.target.value)
             this.setState({suite:suite_without})
+            this.setState({rowSeat:this.state.rowSeat.filter(obj=>obj.name!==e.target.value)})
           }else{
           this.setState({suite:[...this.state.suite,e.target.value]})
           }
+      }
+      handleGAandChange=input=>e=>{
+          // this.handleGA(e)
+          // if(this.state.suite.includes(e.target.value)){
+          //   const suite_without=this.state.suite.filter(suite=>suite!==e.target.value)
+          //   this.setState({suite:suite_without})
+          // }else{
+          // this.setState({suite:[...this.state.suite,e.target.value]})
+          // }
+  
+          // if(this.state.suite.includes(e.target.suitename)){
+            // const newrowSeat=this.state.rowSeat.filter(obj=>obj.name!==e.target.suitename)
+            // this.setState({rowSeat:newrowSeat})
+          // }else{
+          this.setState({rowSeat:[...this.state.rowSeat,{'name':e.target.getAttribute('suitename'),'GA':e.target.getAttribute('gan'),'SRO':e.target.value}]})
+          // }
       }
       
       handleGA=(e)=>{
@@ -141,13 +155,14 @@ class OrderForm extends Component{
       }
       render(){
           {console.log(this.state.rowSeat)}
+          {console.log(this.state.suite)}
         const {step}=this.state
 
-        const {name,res,rep,rowSeat,showInfo,account_number,phone_number,email,creditcard_number,
+        const {name,res,rep,rowSeat,showInfo,selected_suite,account_number,phone_number,email,creditcard_number,
                   csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
                  discount_comment,discount,showDiscount,comments}=this.state
 
-        const values={name,res,rep,rowSeat,showInfo,account_number,phone_number,email,creditcard_number,
+        const values={name,res,rep,rowSeat,selected_suite,showInfo,account_number,phone_number,email,creditcard_number,
             csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
             discount_comment,discount,showDiscount,price_ga,price_sro,comments}
 
@@ -163,6 +178,7 @@ class OrderForm extends Component{
                 confirmClient={this.confirmClient}
                 handleSROandRow={this.handleSROandRow}
                 confirmDiscounts={this.confirmDiscounts}
+                handleSuite={this.handleSuite}
                 />
                 
             )

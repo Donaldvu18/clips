@@ -87,7 +87,7 @@ p{
 
 #textbox_discount{
     width:50%;
-    min-height:10px;
+    /* min-height:10px; */
 }
 #commentsbox{
     text-align:left;

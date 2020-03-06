@@ -24,7 +24,7 @@ class OrderDetails extends Component{
                 'Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*']
                     
     render(){
-        const {values,handleChange,handleGAandChange,confirmClient,handleSROandRow,confirmDiscounts}=this.props
+        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts}=this.props
         let imgurl='../../img/staples_map.jpg'
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
@@ -145,7 +145,7 @@ class OrderDetails extends Component{
                     </label>
                 </div>
 
-                {/* SELECT 2 OTHER GAMES   */}
+                {/* SELECT 2 OTHER GAMES  
                 {this.multi_game.includes(values.event)?
                 <div id='addbox' >
                     <br/>
@@ -157,7 +157,7 @@ class OrderDetails extends Component{
                             })}
                         </select></div>
                 </div>:null}
-                <br/>
+                <br/> */}
                 {/* SUITE SELECTION */}
                 {values.event!==''?<div>
                 <div id='suite_selection' className=''>
@@ -165,7 +165,7 @@ class OrderDetails extends Component{
                         <h2>Suite:</h2>
                         <br/>
                         {this.suite_options.map(suite=>{
-                        return <Suites_test handleSROandRow={handleSROandRow} handleGAandChange={handleGAandChange} suite={suite} selected_suite={values.suite} GA={values.GA} SRO={values.SRO} hyde={values.hyde} handleChange={handleChange}/>
+                        return <Suites_test rowSeat={values.rowSeat} handleSuite={handleSuite} handleGAandChange={handleGAandChange} suite={suite} selected_suite={values.suite} GA={values.GA} SRO={values.SRO} hyde={values.hyde} handleChange={handleChange}/>
                         })}
                 </div>
 
