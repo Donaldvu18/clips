@@ -12,6 +12,7 @@ class OrderForm extends Component{
             res:3432,
             step:1,
             rep:'',
+            rowSeat:[],
             showInfo:false,
             suite:[],
             event:'a',
@@ -35,6 +36,9 @@ class OrderForm extends Component{
             delivery_method:null,
             price_ga:"150",
             price_sro:"175",
+            discount:null,
+            discount_comment:null,
+            showDiscount:false,
             comments:''
         };
         this.baseState=this.state
@@ -74,8 +78,43 @@ class OrderForm extends Component{
         this.setState({showInfo:true})
       }
 
+      confirmDiscounts=()=>{
+        this.setState({showDiscount:true})
+      }
+
+
       handleChange = input => e =>{
         this.setState({[input]:e.target.value});
+        if (input==='discount'){
+          this.setState({showDiscount:false})
+        }
+        // if (input==='SRO'){
+
+          // // const current_rowseat=
+          // // console.log(current_rowseat)
+          // if (this.state.rowSeat.map(rowseat=>rowseat.location).includes(e.target.value.slice(-4))){
+          //   console.log('sup')
+          //   // const new_rowseat=
+          //   this.setState({rowSeat:this.state.rowSeat.filter(rowseat=>rowseat.location!=e.target.value.slice(-4))})
+          // }else{
+          // let temp={'location':e.target.value.slice(-4),'sro':e.target.value.slice(0,-4)}
+          // this.setState({rowSeat:[...this.state.rowSeat,temp]})
+        
+      // }
+      }
+      handleSROandRow=input=>e=>{
+        // this.handleSRO(e)
+        console.log(e)
+        this.setState({[input]:e[0].target.value});
+  
+          // let temp=[2,e.target.value]
+          let temp={'loc':e[1],'sro':e[0].target.value}
+          this.setState({rowSeat:[...this.state.rowSeat,temp]})
+        
+
+      }
+      handleSRO=input=>e=>{
+        this.setState({SRO:e.target.value})
       }
       handleGAandChange=input=>e=>{
           this.handleGA(e)
@@ -101,12 +140,16 @@ class OrderForm extends Component{
         }
       }
       render(){
-          {console.log(this.state.suite)}
+          {console.log(this.state.rowSeat)}
         const {step}=this.state
-        const {name,res,rep,showInfo,account_number,phone_number,email,creditcard_number,
-        csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,comments}=this.state
-        const values={name,res,rep,showInfo,account_number,phone_number,email,creditcard_number,
-            csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,comments}
+
+        const {name,res,rep,rowSeat,showInfo,account_number,phone_number,email,creditcard_number,
+                  csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
+                 discount_comment,discount,showDiscount,comments}=this.state
+
+        const values={name,res,rep,rowSeat,showInfo,account_number,phone_number,email,creditcard_number,
+            csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
+            discount_comment,discount,showDiscount,price_ga,price_sro,comments}
 
 
         switch(step){
@@ -118,6 +161,8 @@ class OrderForm extends Component{
                 values={values}
                 handleGAandChange={this.handleGAandChange}
                 confirmClient={this.confirmClient}
+                handleSROandRow={this.handleSROandRow}
+                confirmDiscounts={this.confirmDiscounts}
                 />
                 
             )

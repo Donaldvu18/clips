@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './Suites_test.css'
 
-const Suites_test = ({selected_suite,suite,handleChange,GA,SRO,hyde,handleGAandChange}) =>{
+const Suites_test = ({selected_suite,suite,handleChange,GA,SRO,hyde,handleGAandChange,handleSROandRow}) =>{
     const GA24_SRO20=['C-16','C-17','C-21','C-22','C-47','C-48','C-52','C-53']
     const GA20_SRO14=['C-18','C-19','C-20','C-49','C-50','C-51']
     const GA12_SRO8=['C-46','C-54','B-29']
@@ -16,6 +16,7 @@ const Suites_test = ({selected_suite,suite,handleChange,GA,SRO,hyde,handleGAandC
     const sro8=[...Array(9).keys()].map(num=>{
         return(<option value={num.toString()}>{num}</option>)
     })
+    
 
     return(
       

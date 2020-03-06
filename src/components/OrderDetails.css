@@ -62,6 +62,7 @@
 
 #summarylabels{
     font-weight:600;
+    text-align:end;
 }
 
 p{
@@ -70,9 +71,24 @@ p{
 
 #price_summary{
     margin-left:2rem;
+    text-align:end;
+}
+#price_container{
+
+    max-width:25%;
+    text-align:right;
+}
+#discount{
+    margin-left:2rem;
+    color:rgb(211, 6, 6);
+    text-align:end;
     
 }
 
+#textbox_discount{
+    width:50%;
+    min-height:10px;
+}
 #commentsbox{
     text-align:left;
 }
