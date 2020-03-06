@@ -1,0 +1,29 @@
+.radiobuttons{
+    margin-top:1rem;
+    margin-right:0rem;
+}
+
+#suite_row{
+    justify-content:space-around;
+}
+
+#buySRO{
+    margin-top:2rem;
+    margin-bottom:2rem;
+    margin-left:2rem;
+}
+
+#space{
+    min-width:300px;
+    padding-right:5rem;
+}
+
+#hyde{
+    margin-bottom:2rem;
+    margin-left:2rem;
+}
+
+#sold_label{
+    color:gray;
+    font-style:italic;
+}

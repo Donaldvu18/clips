@@ -1,0 +1,36 @@
+#pricebox {
+    background-color: rgb(243, 239, 239);
+    font-weight: 600;
+    padding:1.5rem;
+    /* margin:3rem; */
+}
+
+p{
+    text-align: start;
+    
+}
+
+#pr{
+    float:right;
+}
+
+#topleft{
+    align-content:stretch;
+    /* background-color:rgb(94, 165, 161); */
+    width:60%;
+    justify-content: start;
+    text-align:left;
+  }
+
+#pricebox{
+width:40%;
+}
+
+#button_checkout{
+    margin-top:5rem;
+}
+
+#billingbox{
+    justify-content:start;
+    text-align: start;
+}

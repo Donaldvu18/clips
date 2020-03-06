@@ -1,0 +1,24 @@
+#Masthead {
+    
+    color:white;
+    padding:2rem;
+    /* margin-bottom:2rem; */
+    margin:0rem;
+
+}
+
+#header{
+    max-height:20%;
+    background-color: indianred;
+    text-align: center;
+    
+}
+#logo{
+    max-width:5%;
+    padding:1rem;
+}
+
+#row{
+    background-color:rgb(33, 70, 138);
+    justify-content: center;
+}
