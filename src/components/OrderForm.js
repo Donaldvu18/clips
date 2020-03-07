@@ -161,8 +161,8 @@ class OrderForm extends Component{
         }
       }
       render(){
-          {console.log(this.state.rowSeat)}
-          {console.log(this.state.suite)}
+          {console.log(this.state.hyde)}
+          // {console.log(this.state.suite)}
         const {step}=this.state
 
         const {name,res,rep,rowSeat,showInfo,selected_suite,account_number,phone_number,email,creditcard_number,

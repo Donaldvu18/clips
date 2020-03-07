@@ -33,7 +33,7 @@ class OrderDetails extends Component{
         const totalGA=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*values.price_ga:0
 
         const disc=values.showDiscount===true && values.suite.length>0? parseFloat(values.discount):0
-        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc
+        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc+10
         const price_prediscount=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)
         const graybutton=values.discount==='' || values.discount==="0" || values.discount===null || parseFloat(values.discount)>price_prediscount? "disabled":null
         
@@ -43,7 +43,7 @@ class OrderDetails extends Component{
                                                             
                                                             </React.Fragment>)})
 
-       
+        const summary=values.rowSeat.map(order=>{return(<p>Suite: {order.name} / GA: 1-{order.GA} / SRO: {order.SRO>0?'1-':null}{order.SRO}</p>)})
         console.log(totalSRO)
         return(
             <MuiThemeProvider>
@@ -248,16 +248,15 @@ class OrderDetails extends Component{
                     <p><span id='summarylabels'>Client Phone Number: </span>{values.phone_number}</p>
                     <p><span id='summarylabels'>Client Email: </span>{values.email}</p>
                     <p><span id='summarylabels'>Event: </span>{values.event}</p>
-                    <p><span id='summarylabels'>Suite: </span>{values.suite}</p>
-                    <p><span id='summarylabels'>GA: </span>{values.GA}</p>
-                    <p><span id='summarylabels'>SRO's Purchased: </span>{values.SRO}</p>
+                    <p><span id='summarylabels'>Purchases: </span>{summary}</p>
+                    {/* <p><span id='summarylabels'>GA: </span>{values.GA}</p>
+                    <p><span id='summarylabels'>SRO's Purchased: </span>{values.SRO}</p> */}
                     <p><span id='summarylabels'>Price Breakdown: </span></p>
                        <div id='price_container'>
                         {values.rowSeat.length>0 ? <React.Fragment>{pricemap}</React.Fragment>:null}
-                    {/* {values.GA!==null && values.price_GA!==null ? <p id='price_summary'>GA: {values.GA} x ${values.price_ga} = ${gatotal}</p>:null} */}
-                    {/* {values.SRO!==null && values.price_sro!==null ? <p id='price_summary'>SRO: {values.SRO} x ${values.price_sro} = ${srototal}</p>:null} */}
                     {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee = $25</p>:null}
-                    {values.showDiscount===true ? <p id='discount'>- Discount = ${parseFloat(values.discount)}</p>:null}
+                    {subtotal>10 ? <p id='price_summary'>Web Processing Fee = $10</p>:null}
+                    {values.showDiscount===true ? <p id='discount'>Discount = -${parseFloat(values.discount)}</p>:null}
                     {values.rowSeat.length>0? <hr/>:null} 
                     {values.rowSeat.length>0?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null} 
                         </div>

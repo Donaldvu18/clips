@@ -1,10 +1,13 @@
 #pricebox {
     background-color: rgb(243, 239, 239);
-    font-weight: 600;
+    font-weight: 500;
     padding:1.5rem;
     /* margin:3rem; */
 }
 
+#pricebox h5{
+    margin-bottom:1rem;
+}
 p{
     text-align: start;
     

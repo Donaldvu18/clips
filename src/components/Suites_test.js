@@ -44,9 +44,24 @@ const Suites_test = ({selected_suite,suite,rowSeat,handleChange,GA,SRO,hyde,hand
                         {GA12_SRO8.includes(suite) ?  'General Admission: 12 ($100/per) /  Standing Room Capacity: 8 ($90/per)' :null}
                         {GAOther_2020.includes(suite) ?'General Admission: 20 ($120/per) / Standing Room Capacity: 20 ($120/per)' :null}</div>
                 }
-             {selected_suite.includes(suite) ?
+                {selected_suite.includes(suite) ?
                 <SROcomp suite={suite} GA={ga_value} SRO={SRO} handleGAandChange={handleGAandChange} rowSeat={rowSeat}/>:
                 null}
+
+                <div>
+
+                {GAOther_2020.includes(suite) && selected_suite.includes(suite) ?
+                    <label id='hyde'>
+                        Hyde Member? &nbsp;&nbsp;
+                        <select value={hyde} onChange={handleChange('hyde')}>
+                            <option selected='selected' value={null}>-</option>
+                            <option value='Yes'>Yes</option>
+                            <option value='No'>No</option>
+                            
+                        </select>
+                    </label>:null
+                    } 
+                </div>
             </div>
                
             {/* <div>
@@ -64,20 +79,7 @@ const Suites_test = ({selected_suite,suite,rowSeat,handleChange,GA,SRO,hyde,hand
             
             </div> */}
 
-            {/* <div>
-
-            {GAOther_2020.includes(suite) &selected_suite===suite ?
-                <label id='hyde'>
-                    Hyde Member? &nbsp;&nbsp;
-                    <select value={hyde} onChange={handleChange('hyde')}>
-                        <option selected='selected' value={null}>-</option>
-                        <option value='Yes'>Yes</option>
-                        <option value='No'>No</option>
-                        
-                    </select>
-                </label>:null
-                } 
-            </div> */}
+          
         </div>
 
      

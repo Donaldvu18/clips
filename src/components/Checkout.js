@@ -17,8 +17,20 @@ class Checkout extends Component{
         e.preventDefault();
         this.props.prevStep();
     }
+    
     render(){
         const {values,handleChange}=this.props
+        const pricemap=values.rowSeat.map(order=>{return(<React.Fragment>
+            <p id='price_summary'>({order.name}) GA : ${values.price_ga} x {order.GA} = ${parseFloat(values.price_ga)*parseFloat(order.GA)}</p>            
+            <p id='price_summary'>({order.name}) SRO : ${values.price_sro} x {order.SRO} = ${parseFloat(values.price_sro)*parseFloat(order.SRO)}</p>
+            
+            </React.Fragment>)})
+                const totalSRO=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.SRO)).reduce((sum,current)=>sum+current)*values.price_sro:0
+                const totalGA=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*values.price_ga:0
+                const deliveryfee=values.delivery_method==='Print' ? 25 :0
+                const disc=values.showDiscount===true && values.suite.length>0? parseFloat(values.discount):0
+                const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc+10
+                const price_prediscount=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)
         console.log(values.cardNumber)
         console.log(values.expiry)
         console.log(values.cvc)
@@ -49,14 +61,23 @@ class Checkout extends Component{
                     
                         </div>
                         <div id='pricebox'>
-                            <p>Suite Price : $125 x 24 =<span id='pr'> $3,000.00</span></p>
+                            {/* <p>Suite Price : $125 x 24 =<span id='pr'> $3,000.00</span></p>
                             <p>SRO Price : $100 x 20 =<span id='pr'>$2,000.00</span></p>
                             {values.delivery_method==='Print' ? <p>Delivery Fee : <span id='pr'>$20.00</span></p>:null}
                             {/* <p>F & B : <span id='pr'>$1,000.00</span></p> */}
-                            <p>Subtotal : <span id='pr'>$6,000.00</span></p>
+                            {/* <p>Subtotal : <span id='pr'>$6,000.00</span></p>
                             <p>Web Processing Fee : <span id='pr'>$10.00</span></p>
                             <hr/>
-                            <p>Total Price : <span id='pr'>$6,360.00</span></p>
+                            <p>Total Price : <span id='pr'>$6,360.00</span></p> */}
+                            <h5>Price Breakdown</h5>    
+                           
+                        {values.rowSeat.length>0 ? <React.Fragment>{pricemap}</React.Fragment>:null}
+                    {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee = $25</p>:null}
+                    {subtotal>10 ? <p id='price_summary'>Web Processing Fee = $10</p>:null}
+                    {values.showDiscount===true ? <p id='discount'>Discount = -${parseFloat(values.discount)}</p>:null}
+                    {values.rowSeat.length>0? <hr/>:null} 
+                    {values.rowSeat.length>0?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null} 
+                    
                         </div>
                     </div>
                     <div id='billingbox'>
@@ -104,6 +125,11 @@ class Checkout extends Component{
                             style={styles.button}
                             onClick={this.back}
                         />
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                     </div>
                 {/* <div id='top' className='row'> */}
                 {/* <div id='topleft' className=''> */}
