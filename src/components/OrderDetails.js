@@ -24,7 +24,7 @@ class OrderDetails extends Component{
                 'Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*']
                     
     render(){
-        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts}=this.props
+        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts,callBackendAPI}=this.props
         let imgurl='../../img/staples_map.jpg'
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
@@ -312,6 +312,9 @@ class OrderDetails extends Component{
 
             
           </div>:<p id='spacebottom'></p>}
+          <form onSubmit={this.callBackendAPI}>
+          <button type='submit'>Sup</button>
+          </form>
           </div>
           </MuiThemeProvider>
         )

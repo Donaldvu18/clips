@@ -11,6 +11,7 @@
     "react-credit-card-input": "^1.1.5",
     "react-credit-cards": "^0.8.0",
     "react-dom": "^16.13.0",
+    "react-filtered-multiselect": "^0.5.1",
     "react-scripts": "3.4.0",
     "styled-components": "^5.0.1"
   },

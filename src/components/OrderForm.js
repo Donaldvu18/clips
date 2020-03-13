@@ -3,6 +3,7 @@ import OrderDetails from './OrderDetails';
 import Checkout from './Checkout';
 import Confirm from './Confirm';
 import Success from './Success';
+import Axios from 'axios';
 import { ActionSettingsApplications } from 'material-ui/svg-icons';
 class OrderForm extends Component{
     constructor(props){
@@ -60,6 +61,59 @@ class OrderForm extends Component{
     //     }
     //     this.setState({GA:new_ga})
     
+      // API CALL FOR SENDGRID
+    
+
+      callBackendAPI=async() =>{
+        fetch('/api')
+        .then(res=>console.log(res.body))}
+        // .then(customers => console.log(customers))}
+      
+      // componentDidMount(){
+      //   // this.callBackendAPI()
+      //   //   .then(res=>this.setState({data:res.express}))
+      //   //   .catch(err=>console.log(err));
+      //   fetch('/express_backend')
+      //   .then(res=>res.json())
+      //   .then(customers => console.log(customers))}
+
+
+      handleSubmitMail = () => {
+        // event.preventDefault();
+
+        // console.log(event.target);
+
+        // this.setState({
+        //     disabled: true
+        // });
+// http://localhost:5000/
+        Axios.post('/api/email', this.state)
+            .then(res => {
+                if(res.data.success) {
+                    // this.setState({
+                    //     disabled: false,
+                    //     emailSent: true
+                    // });
+                    console.log('sent!')
+                } else {
+                    // this.setState({
+                    //     disabled: false,
+                    //     emailSent: false
+                    // });
+                    console.log('failed')
+                }
+            })
+            .catch(err => {
+                console.log(err);
+
+                // this.setState({
+                //     disabled: false,
+                //     emailSent: false
+                // });
+            })
+
+    }
+
       //Proceed to next step
       nextStep = () => {
         const {step}=this.state;
@@ -186,6 +240,7 @@ class OrderForm extends Component{
                 handleSROandRow={this.handleSROandRow}
                 confirmDiscounts={this.confirmDiscounts}
                 handleSuite={this.handleSuite}
+                callBackendAPI={this.callBackendAPI}
                 />
                 
             )
@@ -204,7 +259,8 @@ class OrderForm extends Component{
                 nextStep={this.nextStep}
                 prevStep={this.prevStep}
                 values={values}   
-                
+                callBackendAPI={this.callBackendAPI}
+                handleSubmitMail={this.handleSubmitMail}
                 />
             )
           case 4:

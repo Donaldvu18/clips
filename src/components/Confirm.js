@@ -10,6 +10,7 @@ class Confirm extends Component{
     continue = e =>{
         e.preventDefault();
         //process form
+        this.props.handleSubmitMail();
         this.props.nextStep();
     }
     
