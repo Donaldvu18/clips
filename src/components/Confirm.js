@@ -32,8 +32,12 @@ class Confirm extends Component{
                     />                    
                     <ListItem
                     primaryText='Client Name'
-                    secondaryText={values.name}
+                    secondaryText={values.clientName}
                     />
+                    <ListItem
+                    primaryText='Client Company'
+                    secondaryText={values.clientCompany}
+                    />                    
                     <ListItem
                     primaryText='Client Account Number'
                     secondaryText={values.account_number}
@@ -54,6 +58,10 @@ class Confirm extends Component{
                     primaryText='Billing Address'
                     secondaryText={values.billing_address}
                     />
+                    <ListItem
+                    primaryText='Billing State'
+                    secondaryText={values.billing_state}
+                    />                    
                     <ListItem
                     primaryText='Billing Zipcode'
                     secondaryText={values.billing_zipcode}

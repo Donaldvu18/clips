@@ -105,6 +105,13 @@ class Checkout extends Component{
                                  />
                             <br/>
                             <TextField
+                                hintText='Enter Billing State'
+                                floatingLabelText='Billing State'
+                                onChange={handleChange('billing_state')}
+                                defaultValue={values.billing_state}
+                                 />
+                            <br/>                            
+                            <TextField
                                 hintText='Enter Billing Zipcode'
                                 floatingLabelText='Billing Zipcode'
                                 onChange={handleChange('billing_zip_code')}

@@ -24,7 +24,7 @@ class OrderDetails extends Component{
                 'Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*']
                     
     render(){
-        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts,callBackendAPI}=this.props
+        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts,callBackendAPI,handleEvent}=this.props
         let imgurl='../../img/staples_map.jpg'
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
@@ -70,7 +70,7 @@ class OrderDetails extends Component{
                         <h2>Client Information</h2>
                         <br/>
                         <h6>Client Name:</h6>
-                        <input className='pl-1 mt-2' list="data" type='text' name='data' onChange={handleChange('name')}/>
+                        <input className='pl-1 mt-2' list="data" type='text' name='data' onChange={handleChange('clientName')}/>
                         <datalist id="data">
                             <option value="John Smith">John Smith</option>
                             <option value="Mary Ballmer">Mary Ballmer</option>
@@ -92,12 +92,14 @@ class OrderDetails extends Component{
                         <br/>
                       
                         <div>
+                        <h6>Client Company:</h6>
+                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientCompany}</p>:<p id='space'></p>}
                         <h6>Client Email:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>jsmith@aol.com</p>:<p id='space'></p>}
+                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientEmail}</p>:<p id='space'></p>}
                         <h6>Client Phone Number:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>(613)-148-3131</p>:<p id='space'></p>}
+                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientPhone}</p>:<p id='space'></p>}
                         <h6>Client Account Number:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>9032901282</p>:<p id='space'></p>}
+                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientAccount}</p>:<p id='space'></p>}
                         </div>
                       
     
@@ -142,17 +144,18 @@ class OrderDetails extends Component{
                 </div>
                 <br/>
                  {/* EVENT SELECT  */}
-               
+
+               {/* {console.log(values.event.slice(-8,))} */}
                 <div id='eventselect'>
                     <h2>Event</h2>
                     <br/>
                     <label id='eventbox'>
-                        <select value={values.event} onChange={handleChange('event')}>
+                        <select value={values.event.slice(0,-8)} onChange={handleEvent('event')}>
                             <option selected='selected' value={''}>-</option>
-                            <option value='Clippers vs Pelicans - Sun Nov 14, 2019'>Clippers vs Pelicans - Sun Nov 14, 2019 </option>
-                            <option value='Clippers vs Rockets - Thurs Dec 19, 2019 *MULTI GAME PACKAGE ONLY*'>Clippers vs Rockets - Thurs Dec 19, 2019 *MULTI GAME PACKAGE ONLY*</option>
-                            <option value='Clippers vs Warriors - Fri Jan 10, 2020 *MULTI GAME PACKAGE ONLY*'>Clippers vs Warriors - Fri Jan 10, 2020 *MULTI GAME PACKAGE ONLY*</option>
-                            <option value='Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*'>Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*</option>
+                            <option value='C191114 Clippers vs Pelicans 11/14/19'>Clippers vs Pelicans - Sun Nov 14, 2019 </option>
+                            <option value='C191219 Clippers vs Rockets 12/19/19'>Clippers vs Rockets - Thurs Dec 19, 2019 *MULTI GAME PACKAGE ONLY*</option>
+                            <option value='C200110 Clippers vs Warriors 1/10/20'>Clippers vs Warriors - Fri Jan 10, 2020 *MULTI GAME PACKAGE ONLY*</option>
+                            <option value='C200228 Clippers vs Nuggets 2/28/20'>Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*</option>
                         </select>
                     </label>
                 </div>
@@ -243,11 +246,12 @@ class OrderDetails extends Component{
                 {/* Order Summary  */}
                 <div id='order_summary'>
                     <h2 className='mb-3'>Order Summary</h2>
-                    <p><span id='summarylabels'>Client Name: </span>{values.name}</p>
-                    <p><span id='summarylabels'>Client Acount Number: </span>{values.account_number}</p>
-                    <p><span id='summarylabels'>Client Phone Number: </span>{values.phone_number}</p>
-                    <p><span id='summarylabels'>Client Email: </span>{values.email}</p>
+                    <p><span id='summarylabels'>Client Name: </span>{values.clientName}</p>
+                    <p><span id='summarylabels'>Client Acount Number: </span>{values.clientAccount}</p>
+                    <p><span id='summarylabels'>Client Phone Number: </span>{values.clientPhone}</p>
+                    <p><span id='summarylabels'>Client Email: </span>{values.clientEmail}</p>
                     <p><span id='summarylabels'>Event: </span>{values.event}</p>
+                    <p><span id='summarylabels'>Date: </span>{values.eventdate}</p>
                     <p><span id='summarylabels'>Purchases: </span>{summary}</p>
                     {/* <p><span id='summarylabels'>GA: </span>{values.GA}</p>
                     <p><span id='summarylabels'>SRO's Purchased: </span>{values.SRO}</p> */}

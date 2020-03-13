@@ -9,7 +9,8 @@ class OrderForm extends Component{
     constructor(props){
         super(props)
         this.state={
-            name:'',
+            clientName:'',
+            clientCompany:'Smith Law LLC',
             res:3432,
             step:1,
             rep:'',
@@ -18,17 +19,19 @@ class OrderForm extends Component{
             suite:[],
             selected_suite:[],
             event:'a',
-            account_number:969402314,
-            phone_number:6173242332,
-            email:'jsmith@gmail.com',
+            eventdate:'',
+            clientAccount:969402314,
+            clientPhone:6173242332,
+            clientEmail:'jsmith@gmail.com',
             creditcard_number:324242,
             csc:316,
             exp_date:'03/2020',
             billing_address:'1212 Flower St',
             billing_city:'Los Angeles',
+            billing_state:'CA',
             billing_zipcode:'90024',
             cardNumber:'2412 5311 0531 2166',
-            expiry:null,
+            expiry:'03/22',
             cvc:613,
             ccname:'John Smith',
             GA:null,
@@ -157,6 +160,10 @@ class OrderForm extends Component{
         
       // }
       }
+      handleEvent = input => e =>{
+        this.setState({[input]:e.target.value.slice(0,-8)});
+        this.setState({eventdate:e.target.value.slice(-8,)})}
+
       handleSROandRow=input=>e=>{
         // this.handleSRO(e)
      
@@ -219,12 +226,12 @@ class OrderForm extends Component{
           // {console.log(this.state.suite)}
         const {step}=this.state
 
-        const {name,res,rep,rowSeat,showInfo,selected_suite,account_number,phone_number,email,creditcard_number,
-                  csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
+        const {clientName,clientCompany,res,rep,rowSeat,showInfo,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
+                  csc,exp_date,billing_address,billing_state,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
                  discount_comment,discount,showDiscount,comments}=this.state
 
-        const values={name,res,rep,rowSeat,selected_suite,showInfo,account_number,phone_number,email,creditcard_number,
-            csc,exp_date,billing_address,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
+        const values={clientName,clientCompany,res,rep,rowSeat,selected_suite,showInfo,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
+            csc,exp_date,billing_address,billing_city,billing_state,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
             discount_comment,discount,showDiscount,price_ga,price_sro,comments}
 
 
@@ -241,6 +248,7 @@ class OrderForm extends Component{
                 confirmDiscounts={this.confirmDiscounts}
                 handleSuite={this.handleSuite}
                 callBackendAPI={this.callBackendAPI}
+                handleEvent={this.handleEvent}
                 />
                 
             )
