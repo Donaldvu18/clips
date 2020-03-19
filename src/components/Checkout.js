@@ -34,6 +34,7 @@ class Checkout extends Component{
         console.log(values.cardNumber)
         console.log(values.expiry)
         console.log(values.cvc)
+        console.log(values.subtotal)
         return(
             <MuiThemeProvider>
                 <div className='container'>

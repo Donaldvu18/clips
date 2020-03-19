@@ -25,7 +25,7 @@ class OrderForm extends Component{
             clientEmail:'jsmith@gmail.com',
             creditcard_number:324242,
             csc:316,
-            exp_date:'03/2020',
+            exp_date:'03/23',
             billing_address:'1212 Flower St',
             billing_city:'Los Angeles',
             billing_state:'CA',
@@ -41,7 +41,8 @@ class OrderForm extends Component{
             delivery_method:null,
             price_ga:"150",
             price_sro:"175",
-            discount:null,
+            subtotal:0,
+            discount:0,
             discount_comment:null,
             showDiscount:false,
             comments:''
@@ -122,7 +123,18 @@ class OrderForm extends Component{
         const {step}=this.state;
         this.setState({step:step+1})
       }
-    
+      
+      handleTotal=()=>{
+        const deliveryfee=this.state.delivery_method==='Print' ? 25 :0
+
+        const totalSRO=this.state.rowSeat.length>0 ? this.state.rowSeat.map(order=>parseFloat(order.SRO)).reduce((sum,current)=>sum+current)*this.state.price_sro:0
+        const totalGA=this.state.rowSeat.length>0 ? this.state.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*this.state.price_ga:0
+
+        const disc=this.state.showDiscount===true && this.state.suite.length>0? parseFloat(this.state.discount):0
+        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc+10        
+        this.setState({subtotal:subtotal})
+      }
+
       prevStep = () => {
         const {step}=this.state;
         this.setState({step:step-1})
@@ -161,7 +173,7 @@ class OrderForm extends Component{
       // }
       }
       handleEvent = input => e =>{
-        this.setState({[input]:e.target.value.slice(0,-8)});
+        this.setState({[input]:e.target.value});
         this.setState({eventdate:e.target.value.slice(-8,)})}
 
       handleSROandRow=input=>e=>{
@@ -207,7 +219,9 @@ class OrderForm extends Component{
             this.setState({rowSeat:[...this.state.rowSeat,{'name':e.target.getAttribute('suitename'),'GA':e.target.getAttribute('gan'),'SRO':e.target.value}]})
         }
       }
-      
+      handleSubtotal=(e)=>{
+        this.setState({subtotal:e})
+      }
       handleGA=(e)=>{
         const GA24_SRO20=['C-16','C-17','C-21','C-22','C-47','C-48','C-52','C-53']
         const GA20_SRO14=['C-18','C-19','C-20','C-49','C-50','C-51']
@@ -226,11 +240,11 @@ class OrderForm extends Component{
           // {console.log(this.state.suite)}
         const {step}=this.state
 
-        const {clientName,clientCompany,res,rep,rowSeat,showInfo,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
+        const {clientName,clientCompany,subtotal,res,rep,rowSeat,showInfo,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
                   csc,exp_date,billing_address,billing_state,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
                  discount_comment,discount,showDiscount,comments}=this.state
 
-        const values={clientName,clientCompany,res,rep,rowSeat,selected_suite,showInfo,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
+        const values={clientName,clientCompany,res,rep,subtotal,rowSeat,selected_suite,showInfo,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
             csc,exp_date,billing_address,billing_city,billing_state,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
             discount_comment,discount,showDiscount,price_ga,price_sro,comments}
 
@@ -249,6 +263,8 @@ class OrderForm extends Component{
                 handleSuite={this.handleSuite}
                 callBackendAPI={this.callBackendAPI}
                 handleEvent={this.handleEvent}
+                handleSubtotal={this.handleSubtotal}
+                handleTotal={this.handleTotal}
                 />
                 
             )

@@ -5,7 +5,7 @@ const Header = () => {
     return(
         <div id='header'>
             <div className='row' id='row'>
-           <img className='img-fluid' src={imgurl} alt='Clippers Logo' id='logo'/>
+           {/* <img className='img-fluid' src={imgurl} alt='Clippers Logo' id='logo'/> */}
             <h1 id='Masthead'>Clippers Suite Order Form</h1>
             </div>
         </div>

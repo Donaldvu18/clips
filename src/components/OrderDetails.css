@@ -1,11 +1,16 @@
-/* .container{
+@media (max-width: 1400px) {
+.container{
     min-width:80%;
-} */
+}
+}
+
 #eventselect{
     text-align:left;
     /* margin-bottom:2rem; */
 }
-
+#bar{
+    text-decoration:underline;
+}
 #client_info{
     padding:1rem;
 }

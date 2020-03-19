@@ -13,6 +13,7 @@ class OrderDetails extends Component{
     continue = e =>{
         e.preventDefault();
         this.props.nextStep();
+        this.props.handleTotal();
     }
     state={showInfo:false}
     suite_options=['C-16','C-17','C-18','C-19','C-20','C-21','C-22','C-46','C-47','C-48','C-49',
@@ -24,7 +25,7 @@ class OrderDetails extends Component{
                 'Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*']
                     
     render(){
-        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts,callBackendAPI,handleEvent}=this.props
+        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts,callBackendAPI,handleEvent,handleTotal}=this.props
         let imgurl='../../img/staples_map.jpg'
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
@@ -44,11 +45,11 @@ class OrderDetails extends Component{
                                                             </React.Fragment>)})
 
         const summary=values.rowSeat.map(order=>{return(<p>Suite: {order.name} / GA: 1-{order.GA} / SRO: {order.SRO>0?'1-':null}{order.SRO}</p>)})
-        console.log(totalSRO)
+        console.log(values.selected_suite)
         return(
             <MuiThemeProvider>
             <div className='container p-0'>
-                <Bar page='Order Details'/>
+                <Bar id='bar' page='Order Details'/>
     
                 {/* First four fields */}
                 <div id='top' className='m-0 row'>
@@ -62,6 +63,10 @@ class OrderDetails extends Component{
                                     <option selected='selected' value={null}>-</option>
                                     <option value='Ryan Bleier'>Ryan Bleier</option>
                                     <option value='Alexander Smith'>Alexander Smith John</option>
+                                    <option value='Donny Johnson'>Donny Johnson</option>
+                                    <option value='Kalvin Garcia'>Kalvin Garcia</option>
+                                    <option value='Connor Jackson'>Connor Jackson</option>
+                                    <option value='Dray Green'>Dray Green</option>
                                     
                                 </select>
                             </label>
@@ -150,7 +155,7 @@ class OrderDetails extends Component{
                     <h2>Event</h2>
                     <br/>
                     <label id='eventbox'>
-                        <select value={values.event.slice(0,-8)} onChange={handleEvent('event')}>
+                        <select value={values.event} onChange={handleEvent('event')}>
                             <option selected='selected' value={''}>-</option>
                             <option value='C191114 Clippers vs Pelicans 11/14/19'>Clippers vs Pelicans - Sun Nov 14, 2019 </option>
                             <option value='C191219 Clippers vs Rockets 12/19/19'>Clippers vs Rockets - Thurs Dec 19, 2019 *MULTI GAME PACKAGE ONLY*</option>
@@ -316,9 +321,7 @@ class OrderDetails extends Component{
 
             
           </div>:<p id='spacebottom'></p>}
-          <form onSubmit={this.callBackendAPI}>
-          <button type='submit'>Sup</button>
-          </form>
+ 
           </div>
           </MuiThemeProvider>
         )
