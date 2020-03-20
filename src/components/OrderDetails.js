@@ -7,6 +7,7 @@ import FilteredMultiSelect from 'react-filtered-multiselect'
 import Bar from './Bar';
 import Suites from './Suites.js';
 import Suites_test from './Suites_test';
+import AsyncSelect from 'react-select/async'
 import './OrderDetails.css'
 
 class OrderDetails extends Component{
@@ -25,7 +26,7 @@ class OrderDetails extends Component{
                 'Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*']
                     
     render(){
-        const {values,handleChange,handleGAandChange,confirmClient,handleSuite,confirmDiscounts,callBackendAPI,handleEvent,handleTotal}=this.props
+        const {values,handleChange,handleGAandChange,handleSuite,confirmDiscounts,callRepBackendAPI,handleEvent,handleTotal,handleRep,callClientBackendAPI,handleClient}=this.props
         let imgurl='../../img/staples_map.jpg'
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
@@ -44,48 +45,77 @@ class OrderDetails extends Component{
                                                             
                                                             </React.Fragment>)})
 
+      
         const summary=values.rowSeat.map(order=>{return(<p>Suite: {order.name} / GA: 1-{order.GA} / SRO: {order.SRO>0?'1-':null}{order.SRO}</p>)})
-        console.log(values.selected_suite)
+        // const replist=values.replist.map(rep=>{return(<option value={rep.rep_name}>{rep.rep_name}</option>)})
+        // const repvector=values.replist.map(rep=>(rep.rep_name.split(" ")[1]+', ' + rep.rep_name.split(" ")[0],rep.rep_id)).sort()
+        const sortedreps=values.replist.sort((a, b) => (a.rep_last_name >b.rep_last_name) ? 1 : -1)        
+        const replist=sortedreps.map(rep=>{return(<option data-value={rep.rep_id}>{rep.rep_last_name + ', ' + rep.rep_first_name}</option>)})
+        // const replist=repvector.map(rep=>{return(<option data-value={rep[1]}>{rep[0]}</option>)})
         return(
             <MuiThemeProvider>
             <div className='container p-0'>
                 <Bar id='bar' page='Order Details'/>
-    
+
                 {/* First four fields */}
                 <div id='top' className='m-0 row'>
                     <div id='topleft' className=''>
                         {/* Sales Rep */}
                         <div>
+                            {/* {console.log(values.replist)} */}
                             <h2>Sales Representative</h2>
                             <br/>
-                            <label id='eventbox'>
-                                <select value={values.rep} onChange={handleChange('rep')}>
+                            {/* <label id='eventbox'>
+                            <input className='pl-1 mt-2' list="salesrep" type='text' name='salesrep' onChange={handleRep('rep')}/>
+                                <datalist id="salesrep">
                                     <option selected='selected' value={null}>-</option>
-                                    <option value='Ryan Bleier'>Ryan Bleier</option>
+                                    {replist}
+                                </datalist>                                
+                                {/* <select value={values.rep} onChange={handleChange('rep')}> */}
+                                    {/* <option selected='selected' value={null}>-</option> */}
+                                    {/* <option value='Ryan Bleier'>Ryan Bleier</option>
                                     <option value='Alexander Smith'>Alexander Smith John</option>
                                     <option value='Donny Johnson'>Donny Johnson</option>
                                     <option value='Kalvin Garcia'>Kalvin Garcia</option>
                                     <option value='Connor Jackson'>Connor Jackson</option>
-                                    <option value='Dray Green'>Dray Green</option>
-                                    
-                                </select>
-                            </label>
+                                    <option value='Dray Green'>Dray Green</option> */}
+
+                                    {/* {replist} */}
+                                {/* </select> */}
+                            {/* </label> */}
+                
+                
+                       <AsyncSelect
+                        id='salesbox'
+                            value={{label: values.rep, value: values.rep} }
+                            loadOptions={callRepBackendAPI}
+                            placeholder="Select Rep..."
+                            onChange={handleRep()}
+                            defaultOptions={false}
+                        />
+                        <br/>
                         </div>
-                       <br/>
+
+                        {/* TESTT******************** */}
+                        {/* <div>
+                            {console.log(values.clientAccount)}
+                      
+                        <br/>
+                        </div> */}
+
+                       {/* CLIENT INFOOOOOOO*************************************************** */}
                         <h2>Client Information</h2>
                         <br/>
-                        <h6>Client Name:</h6>
-                        <input className='pl-1 mt-2' list="data" type='text' name='data' onChange={handleChange('clientName')}/>
-                        <datalist id="data">
-                            <option value="John Smith">John Smith</option>
-                            <option value="Mary Ballmer">Mary Ballmer</option>
-                            <option value="Adam Williams">Adam Williams</option>
-                            <option value="Johnathan Leonard">Johnathan Leonard</option>
-                            <option value="Ashley George">Ashley George</option>
-                            <option value="Jorvis Harrell">Jorvis Harrell</option>
-                        </datalist>
-                        <button className='' onClick={confirmClient} type="button">Confirm</button>
-                        <br/>
+                        <h6><b>Client Name:</b></h6>
+                        <AsyncSelect
+                        id='clientbox'
+                            value={{label: values.clientName, value: values.clientName} }
+                            loadOptions={callClientBackendAPI}
+                            placeholder="Select Client..."
+                            onChange={handleClient()}
+                            defaultOptions={false}
+                        />
+                      
                        
 {/* 
                         <TextField
@@ -97,14 +127,14 @@ class OrderDetails extends Component{
                         <br/>
                       
                         <div>
-                        <h6>Client Company:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientCompany}</p>:<p id='space'></p>}
-                        <h6>Client Email:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientEmail}</p>:<p id='space'></p>}
-                        <h6>Client Phone Number:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientPhone}</p>:<p id='space'></p>}
-                        <h6>Client Account Number:</h6>
-                            {values.name!=='' && values.showInfo===true ? <p id='client_info'>{values.clientAccount}</p>:<p id='space'></p>}
+                        <h6><b>Client Company:</b></h6>
+                            {values.clientName!=='' ? <p id='client_info'>{values.clientCompany}</p>:<p id='space'></p>}
+                        <h6><b>Client Email:</b></h6>
+                            {values.clientName!=='' ? <p id='client_info'>{values.clientEmail}</p>:<p id='space'></p>}
+                        <h6><b>Client Phone Number:</b></h6>
+                            {values.clientName!=='' ? <p id='client_info'>{values.clientPhone}</p>:<p id='space'></p>}
+                        <h6><b>Client Account Number:</b></h6>
+                            {values.clientName!=='' ? <p id='client_info'>{values.clientAccount}</p>:<p id='space'></p>}
                         </div>
                       
     

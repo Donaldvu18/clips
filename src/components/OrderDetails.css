@@ -11,9 +11,18 @@
 #bar{
     text-decoration:underline;
 }
-#client_info{
-    padding:1rem;
+#salesbox{
+    width:60%;
 }
+#clientbox{
+    padding-top:1rem;
+    padding-bottom:.5rem;
+    width:60%;
+}
+#client_info{
+    padding:.5rem;
+}
+
 
 .fade_in {
 	opacity: 1;

@@ -14,8 +14,9 @@ class OrderForm extends Component{
             res:3432,
             step:1,
             rep:'',
+            repId:'',
+            replist:[],
             rowSeat:[],
-            showInfo:false,
             suite:[],
             selected_suite:[],
             event:'a',
@@ -68,19 +69,71 @@ class OrderForm extends Component{
       // API CALL FOR SENDGRID
     
 
-      callBackendAPI=async() =>{
-        fetch('/api')
-        .then(res=>console.log(res.body))}
+      // callBackendAPI=async() =>{
+      //   fetch('/findRep/b')
+      //   .then(res=>res.json())
+      //   .then(rep=> this.setState({replist:rep.recordset},()=>console.log(rep)))
+      // }
         // .then(customers => console.log(customers))}
       
-      // componentDidMount(){
-      //   // this.callBackendAPI()
-      //   //   .then(res=>this.setState({data:res.express}))
-      //   //   .catch(err=>console.log(err));
+        callRepBackendAPI = (inputValue, callback) => {
+          if (!inputValue) {
+            callback([]);
+
+          } else {
+              fetch('/findRep?char='+inputValue)
+              .then(resp=>{
+                return resp?resp.json():{}
+
+              }).then((data) =>{
+                  const tempArray=data.recordset.map(dat=>({label:`${dat.rep_last_name}, ${dat.rep_first_name}`,value:dat.rep_id}))
+                  callback(tempArray)   
+
+              }).catch((error) => {
+                console.log(error, "catch the hoop")
+
+              });
+
+          }};
+  
+          callClientBackendAPI = (inputValue, callback) => {
+            if (!inputValue) {
+              callback([]);
+  
+            } else {
+                fetch('/findClient?char='+inputValue)
+                .then(resp=>{
+                  return resp?resp.json():{}
+  
+                }).then((data) =>{
+                    const tempArray=data.recordset.map(dat=>({label:`${dat.last_name}, ${dat.first_name}`,value:dat}))
+                    console.log(tempArray)
+                    callback(tempArray)   
+  
+                }).catch((error) => {
+                  console.log(error, "catch the hoop")
+  
+                });
+  
+            }};      
+
+      handleClient = input => ({value,label}) =>{
+        this.setState({clientName:label})
+        this.setState({clientEmail:value.email})
+        this.setState({clientCompany:value.company_name})
+        this.setState({clientAccount:value.account_number})
+        this.setState({clientPhone:value.phone1})        
+
+      }     
+
+      componentDidMount(){
+        // this.callBackendAPI()
+          // .then(res=>this.setState({data:res.express}))
+          // .catch(err=>console.log(err));
       //   fetch('/express_backend')
       //   .then(res=>res.json())
       //   .then(customers => console.log(customers))}
-
+      }
 
       handleSubmitMail = () => {
         // event.preventDefault();
@@ -144,15 +197,18 @@ class OrderForm extends Component{
         this.setState(this.baseState)
       }
 
-      confirmClient = () =>{
-        this.setState({showInfo:true})
-      }
 
       confirmDiscounts=()=>{
         this.setState({showDiscount:true})
       }
 
+      handleRep = input => ({value,label}) =>{
+        // this.setState({rep:e.target.getAttribute('data-value')});
+        this.setState({rep:label})
+        this.setState({repId:value})
+      }
 
+ 
       handleChange = input => e =>{
         this.setState({[input]:e.target.value});
         if (input==='discount'){
@@ -236,15 +292,15 @@ class OrderForm extends Component{
         }
       }
       render(){
-          {console.log(this.state.hyde)}
+
           // {console.log(this.state.suite)}
         const {step}=this.state
 
-        const {clientName,clientCompany,subtotal,res,rep,rowSeat,showInfo,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
+        const {clientName,clientCompany,subtotal,res,rep,repId,rowSeat,replist,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
                   csc,exp_date,billing_address,billing_state,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
                  discount_comment,discount,showDiscount,comments}=this.state
 
-        const values={clientName,clientCompany,res,rep,subtotal,rowSeat,selected_suite,showInfo,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
+        const values={clientName,clientCompany,res,rep,repId,subtotal,replist,rowSeat,selected_suite,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
             csc,exp_date,billing_address,billing_city,billing_state,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
             discount_comment,discount,showDiscount,price_ga,price_sro,comments}
 
@@ -257,14 +313,16 @@ class OrderForm extends Component{
                 handleChange={this.handleChange}
                 values={values}
                 handleGAandChange={this.handleGAandChange}
-                confirmClient={this.confirmClient}
                 handleSROandRow={this.handleSROandRow}
                 confirmDiscounts={this.confirmDiscounts}
                 handleSuite={this.handleSuite}
-                callBackendAPI={this.callBackendAPI}
+                callRepBackendAPI={this.callRepBackendAPI}
                 handleEvent={this.handleEvent}
                 handleSubtotal={this.handleSubtotal}
                 handleTotal={this.handleTotal}
+                handleRep={this.handleRep}
+                handleClient={this.handleClient}
+                callClientBackendAPI={this.callClientBackendAPI}
                 />
                 
             )
