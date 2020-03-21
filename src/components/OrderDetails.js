@@ -7,6 +7,7 @@ import FilteredMultiSelect from 'react-filtered-multiselect'
 import Bar from './Bar';
 import Suites from './Suites.js';
 import Suites_test from './Suites_test';
+import Discount from './Discount';
 import AsyncSelect from 'react-select/async'
 import './OrderDetails.css'
 
@@ -26,7 +27,7 @@ class OrderDetails extends Component{
                 'Clippers vs Nuggets - Fri Feb 28, 2020 *MULTI GAME PACKAGE ONLY*']
                     
     render(){
-        const {values,handleChange,handleGAandChange,handleSuite,confirmDiscounts,callRepBackendAPI,handleEvent,handleTotal,handleRep,callClientBackendAPI,handleClient}=this.props
+        const {values,handleChange,handleGAandChange,handleSuite,confirmDiscounts,callRepBackendAPI,handleEvent,handleTotal,handleRep,callClientBackendAPI,handleClient,removeDiscount}=this.props
         let imgurl='../../img/staples_map.jpg'
         const new_multi_game=this.multi_game.filter(selected=>selected!==values.event)
         const deliveryfee=values.delivery_method==='Print' ? 25 :0
@@ -35,7 +36,7 @@ class OrderDetails extends Component{
         const totalGA=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*values.price_ga:0
 
         const disc=values.showDiscount===true && values.suite.length>0? parseFloat(values.discount):0
-        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc+10
+        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)+10
         const price_prediscount=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)
         const graybutton=values.discount==='' || values.discount==="0" || values.discount===null || parseFloat(values.discount)>price_prediscount? "disabled":null
         
@@ -51,6 +52,10 @@ class OrderDetails extends Component{
         // const repvector=values.replist.map(rep=>(rep.rep_name.split(" ")[1]+', ' + rep.rep_name.split(" ")[0],rep.rep_id)).sort()
         const sortedreps=values.replist.sort((a, b) => (a.rep_last_name >b.rep_last_name) ? 1 : -1)        
         const replist=sortedreps.map(rep=>{return(<option data-value={rep.rep_id}>{rep.rep_last_name + ', ' + rep.rep_first_name}</option>)})
+        const distlist=values.discountList!==false ?values.discountList.map(disc=>disc.comment):''
+
+        const sumdisc=values.discountList!==false? values.discountList.map(disc=>disc.discount):null
+        const total=subtotal-sumdisc.reduce((a, b) => a + b, 0)
         // const replist=repvector.map(rep=>{return(<option data-value={rep[1]}>{rep[0]}</option>)})
         return(
             <MuiThemeProvider>
@@ -106,7 +111,7 @@ class OrderDetails extends Component{
                        {/* CLIENT INFOOOOOOO*************************************************** */}
                         <h2>Client Information</h2>
                         <br/>
-                        <h6><b>Client Name:</b></h6>
+                        <h6><b>Search Client Name:</b></h6>
                         <AsyncSelect
                         id='clientbox'
                             value={{label: values.clientName, value: values.clientName} }
@@ -127,14 +132,18 @@ class OrderDetails extends Component{
                         <br/>
                       
                         <div>
-                        <h6><b>Client Company:</b></h6>
-                            {values.clientName!=='' ? <p id='client_info'>{values.clientCompany}</p>:<p id='space'></p>}
+                        <h6 id='client_info'><b> Client:  </b> {values.clientName!=='' ? values.clientName:null}</h6>
+                        <h6 id='client_info'><b> Company:  </b> {values.clientName!=='' ? values.clientCompany:null}</h6>
+                        <h6 id='client_info'><b> Email:  </b> {values.clientName!=='' ? values.clientEmail:null}</h6>
+                        <h6 id='client_info'><b> Phone Number:  </b> {values.clientName!=='' ? values.clientPhone:null}</h6>
+                        <h6 id='client_info'><b> Account Number:  </b> {values.clientName!=='' ? values.clientAccount:null}</h6>
+                            {/* {values.clientName!=='' ? <p id='client_info'>{values.clientCompany}</p>:<p id='space'></p>}
                         <h6><b>Client Email:</b></h6>
                             {values.clientName!=='' ? <p id='client_info'>{values.clientEmail}</p>:<p id='space'></p>}
                         <h6><b>Client Phone Number:</b></h6>
                             {values.clientName!=='' ? <p id='client_info'>{values.clientPhone}</p>:<p id='space'></p>}
                         <h6><b>Client Account Number:</b></h6>
-                            {values.clientName!=='' ? <p id='client_info'>{values.clientAccount}</p>:<p id='space'></p>}
+                            {values.clientName!=='' ? <p id='client_info'>{values.clientAccount}</p>:<p id='space'></p>} */}
                         </div>
                       
     
@@ -281,6 +290,7 @@ class OrderDetails extends Component{
                 {/* Order Summary  */}
                 <div id='order_summary'>
                     <h2 className='mb-3'>Order Summary</h2>
+                    <p><span id='summarylabels'>Rep Name: </span>{values.rep}</p>
                     <p><span id='summarylabels'>Client Name: </span>{values.clientName}</p>
                     <p><span id='summarylabels'>Client Acount Number: </span>{values.clientAccount}</p>
                     <p><span id='summarylabels'>Client Phone Number: </span>{values.clientPhone}</p>
@@ -295,33 +305,40 @@ class OrderDetails extends Component{
                         {values.rowSeat.length>0 ? <React.Fragment>{pricemap}</React.Fragment>:null}
                     {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee = $25</p>:null}
                     {subtotal>10 ? <p id='price_summary'>Web Processing Fee = $10</p>:null}
-                    {values.showDiscount===true ? <p id='discount'>Discount = -${parseFloat(values.discount)}</p>:null}
+                    {/* {values.showDiscount===true ? <p id='discount'>Discount = -${parseFloat(values.discount)}</p>:null} */}
                     {values.rowSeat.length>0? <hr/>:null} 
                     {values.rowSeat.length>0?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null} 
+                    {values.discountList.map(disc=>{return <Discount disc={disc} removeDiscount={removeDiscount}/>})}
+                    {values.rowSeat.length>0? <hr/>:null} 
+                    {values.rowSeat.length>0 ? <p id='summarylabels'>Total: ${total.toString()}</p>:null}
                         </div>
                 </div>
                 <br/>
                 <br/>
-
+                     
                 {/* DISCOUNT BOX */}
                   <div id='commentsbox'>
                     <h2>Discounts:</h2>
                     <br/>
+                    <form onSubmit={confirmDiscounts}>
+                        <div>
                     <label for="quantity">Amount:</label><br/>
-                    $ {subtotal>0 && values.suite.length>0? <input defaultValue={values.discount} min="0" type="number" id="quantity" name="discount" className='mb-2' max='99' onChange={handleChange('discount')}></input>:
-                    <input defaultValue={values.discount} disabled min="0" type="number" id="quantity" name="discount" className='mb-2' max='99' onChange={handleChange('discount')}></input>}
+                    $ {subtotal>0 && values.suite.length>0? <input value={values.discount} defaultValue={values.discount} min="0" type="number" id="quantity" name="discount" className='mb-2' onChange={handleChange('discount')}></input>:
+                    <input  values={values.discount} disabled min="0" type="number" id="quantity" name="discount" className='mb-2' onChange={handleChange('discount')}></input>}
                     <br/>
                     <label>Discount description:</label><br/>
                     
-                    {graybutton==='disabled'?<textarea defaultValue={values.discount_comment} disabled id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>:
-                    <textarea defaultValue={values.discount_comment} id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>}
+                    {graybutton==='disabled'?<textarea value={values.discount_comment} disabled id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>:
+                    <textarea value={values.discount_comment} id='textbox_discount' className='mb-2' name='discount_comment' onChange={handleChange('discount_comment')}/>}
                     <br/>
                     {graybutton==='disabled'? <button className='' disabled onClick={confirmDiscounts} type="button">Apply</button> :
-                     <button className=''  onClick={confirmDiscounts} type="button">Apply</button>}
+                     <button className=''   type="submit">Apply</button>}
 
 
                      {parseFloat(values.discount)>price_prediscount && values.suite.length>0? <p id='disc_error' className='mt-2'>Discount cannot exceed total price.</p>:null}
                     {values.showDiscount===true ? <p className='mt-2'>Discount has been applied.</p>:null}
+                    </div>
+                    </form>
                 </div>
                 <br/>      
                 <br/>

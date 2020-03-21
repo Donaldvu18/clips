@@ -1,0 +1,23 @@
+.close{
+    color:red;
+    line-height:.9;
+}
+#disc{
+    color:red;
+    padding-left:0rem;
+    padding-right:1.3rem;
+}
+.discrow{
+    justify-content: end;
+  
+}
+#discbox{
+    overflow-wrap: break-word;
+    text-align:right;
+    margin-bottom:.5rem;
+}
+
+.discbox{
+  
+    text-align:right;
+}

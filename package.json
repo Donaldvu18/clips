@@ -14,7 +14,8 @@
     "react-filtered-multiselect": "^0.5.1",
     "react-scripts": "3.4.0",
     "react-select": "^3.0.8",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1",
+    "uuid": "^7.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

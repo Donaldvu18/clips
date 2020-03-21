@@ -28,15 +28,27 @@ class Checkout extends Component{
                 const totalSRO=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.SRO)).reduce((sum,current)=>sum+current)*values.price_sro:0
                 const totalGA=values.rowSeat.length>0 ? values.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*values.price_ga:0
                 const deliveryfee=values.delivery_method==='Print' ? 25 :0
-                const disc=values.showDiscount===true && values.suite.length>0? parseFloat(values.discount):0
-                const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc+10
+                // const disc=values.showDiscount===true && values.suite.length>0? parseFloat(values.discount):0
+                const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)+10
                 const price_prediscount=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)
-        console.log(values.cardNumber)
-        console.log(values.expiry)
-        console.log(values.cvc)
-        console.log(values.subtotal)
+                const sumdisc=values.discountList!==false? values.discountList.map(disc=>disc.discount):null
+                const total=subtotal-sumdisc.reduce((a, b) => a + b, 0)
+                const discvector=values.discountList.map(disc=>{return <div className='row discrow'>
+                                                                <div className='col-9'>
+                                                                    {disc.comment}
+                                                                </div>
+                                                                <div id='disc' className='col-3 discbox'>
+                                                                    -${disc.discount}
+                                                                </div>
+                                                            </div>
+                })
+                
+                // <p id='summarylabelsred'>-${disc}</p>})
+                // const discvalues=values.discountList!==false?  :null
+ 
         return(
             <MuiThemeProvider>
+                {console.log()}
                 <div className='container'>
                     <Bar page='Checkout'/>
                     <div id='top' className='m-0 row'>
@@ -70,15 +82,18 @@ class Checkout extends Component{
                             <p>Web Processing Fee : <span id='pr'>$10.00</span></p>
                             <hr/>
                             <p>Total Price : <span id='pr'>$6,360.00</span></p> */}
-                            <h5>Price Breakdown</h5>    
+                            <h5>Event: {values.event}</h5>
+                            {/* <h6>Price Breakdown:</h6>     */}
                            
                         {values.rowSeat.length>0 ? <React.Fragment>{pricemap}</React.Fragment>:null}
                     {values.delivery_method==='Print' ? <p id='price_summary'>Standard Mail Fee = $25</p>:null}
                     {subtotal>10 ? <p id='price_summary'>Web Processing Fee = $10</p>:null}
-                    {values.showDiscount===true ? <p id='discount'>Discount = -${parseFloat(values.discount)}</p>:null}
+                    
                     {values.rowSeat.length>0? <hr/>:null} 
                     {values.rowSeat.length>0?<p id='summarylabels'>Subtotal: ${subtotal}</p>:null} 
-                    
+                    {values.discountList.length>0 ? discvector:null}
+                    <hr/>
+                    {values.rowSeat.length>0?<p id='summarylabels'>Total: ${total}</p>:null} 
                         </div>
                     </div>
                     <div id='billingbox'>

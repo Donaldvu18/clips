@@ -4,6 +4,7 @@ import Checkout from './Checkout';
 import Confirm from './Confirm';
 import Success from './Success';
 import Axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { ActionSettingsApplications } from 'material-ui/svg-icons';
 class OrderForm extends Component{
     constructor(props){
@@ -43,6 +44,8 @@ class OrderForm extends Component{
             price_ga:"150",
             price_sro:"175",
             subtotal:0,
+            total:0,
+            discountList:[],
             discount:0,
             discount_comment:null,
             showDiscount:false,
@@ -107,7 +110,6 @@ class OrderForm extends Component{
   
                 }).then((data) =>{
                     const tempArray=data.recordset.map(dat=>({label:`${dat.last_name}, ${dat.first_name}`,value:dat}))
-                    console.log(tempArray)
                     callback(tempArray)   
   
                 }).catch((error) => {
@@ -122,7 +124,8 @@ class OrderForm extends Component{
         this.setState({clientEmail:value.email})
         this.setState({clientCompany:value.company_name})
         this.setState({clientAccount:value.account_number})
-        this.setState({clientPhone:value.phone1})        
+        const phonenum=value.phone1!=='N/A' ?value.phone1.slice(0,-7) + '-' + value.phone1.slice(-7,-4) + '-' + value.phone1.slice(-4):'N/A'
+        this.setState({clientPhone:phonenum})        
 
       }     
 
@@ -183,9 +186,14 @@ class OrderForm extends Component{
         const totalSRO=this.state.rowSeat.length>0 ? this.state.rowSeat.map(order=>parseFloat(order.SRO)).reduce((sum,current)=>sum+current)*this.state.price_sro:0
         const totalGA=this.state.rowSeat.length>0 ? this.state.rowSeat.map(order=>parseFloat(order.GA)).reduce((sum,current)=>sum+current)*this.state.price_ga:0
 
-        const disc=this.state.showDiscount===true && this.state.suite.length>0? parseFloat(this.state.discount):0
-        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+parseFloat(deliveryfee)-disc+10        
+        const sumdisc=this.state.discountList!==false && this.state.suite.length>0? this.state.discountList.map(disc=>disc.discount):null
+        
+        const subtotal=parseFloat(totalGA)+parseFloat(totalSRO)+10 +parseFloat(deliveryfee)   
+        const total=subtotal-sumdisc.reduce((a, b) => a + b, 0)
+        
+        
         this.setState({subtotal:subtotal})
+        this.setState({total:total})
       }
 
       prevStep = () => {
@@ -198,10 +206,26 @@ class OrderForm extends Component{
       }
 
 
-      confirmDiscounts=()=>{
+      confirmDiscounts=(e)=>{
+        // this.setState({showDiscount:true})
+        e.preventDefault()
+  
+        this.setState({discountList:[...this.state.discountList,{key:uuidv4(),discount:this.state.discount,comment:this.state.discount_comment}]}, 
+          ()=>{
+        
+              this.setState({discount:0})
+        
+            this.setState({discount_comment:''})
+          })
         this.setState({showDiscount:true})
+        // this.setState({total:this.state.total-this.state.discount})
       }
 
+      removeDiscount=(e)=>{
+        const newList=this.state.discountList.filter(disc=> disc.key!==e.key)
+        this.setState({discountList:newList})
+        this.setState({total:this.state.total-e.discount})
+      }
       handleRep = input => ({value,label}) =>{
         // this.setState({rep:e.target.getAttribute('data-value')});
         this.setState({rep:label})
@@ -210,9 +234,11 @@ class OrderForm extends Component{
 
  
       handleChange = input => e =>{
-        this.setState({[input]:e.target.value});
         if (input==='discount'){
           this.setState({showDiscount:false})
+          this.setState({[input]:parseInt(e.target.value)});
+        }else{
+        this.setState({[input]:e.target.value});
         }
         // if (input==='SRO'){
 
@@ -296,13 +322,13 @@ class OrderForm extends Component{
           // {console.log(this.state.suite)}
         const {step}=this.state
 
-        const {clientName,clientCompany,subtotal,res,rep,repId,rowSeat,replist,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
+        const {clientName,clientCompany,subtotal,total,res,rep,repId,rowSeat,replist,selected_suite,clientAccount,eventdate,clientPhone,clientEmail,creditcard_number,
                   csc,exp_date,billing_address,billing_state,billing_city,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,price_ga,price_sro,
-                 discount_comment,discount,showDiscount,comments}=this.state
+                 discount_comment,discount,discountList,showDiscount,comments}=this.state
 
-        const values={clientName,clientCompany,res,rep,repId,subtotal,replist,rowSeat,selected_suite,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
+        const values={clientName,clientCompany,res,rep,repId,total,subtotal,replist,rowSeat,selected_suite,eventdate,clientAccount,clientPhone,clientEmail,creditcard_number,
             csc,exp_date,billing_address,billing_city,billing_state,billing_zipcode,suite,event,cardNumber,expiry,cvc,ccname,GA,SRO,hyde,ra,delivery_method,
-            discount_comment,discount,showDiscount,price_ga,price_sro,comments}
+            discount_comment,discount,showDiscount,discountList,price_ga,price_sro,comments}
 
 
         switch(step){
@@ -323,6 +349,7 @@ class OrderForm extends Component{
                 handleRep={this.handleRep}
                 handleClient={this.handleClient}
                 callClientBackendAPI={this.callClientBackendAPI}
+                removeDiscount={this.removeDiscount}
                 />
                 
             )

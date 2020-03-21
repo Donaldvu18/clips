@@ -20,7 +20,7 @@
     width:60%;
 }
 #client_info{
-    padding:.5rem;
+    margin-bottom:1rem;
 }
 
 
@@ -92,7 +92,7 @@ p{
 }
 #price_container{
 
-    max-width:40%;
+    max-width:50%;
     text-align:right;
 }
 #disc_error{

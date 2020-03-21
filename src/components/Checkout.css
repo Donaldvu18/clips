@@ -4,7 +4,22 @@
     padding:1.5rem;
     /* margin:3rem; */
 }
+.discrow{
 
+justify-content: end;
+overflow-wrap: break-word;
+    
+}
+
+.discbox{
+  
+    text-align:right;
+}
+#summarylabelsred{
+    font-weight:600;
+    color:red;
+    text-align:end;
+}
 #pricebox h5{
     margin-bottom:1rem;
 }
@@ -20,13 +35,13 @@ p{
 #topleft{
     align-content:stretch;
     /* background-color:rgb(94, 165, 161); */
-    width:60%;
+    width:50%;
     justify-content: start;
     text-align:left;
   }
 
 #pricebox{
-width:40%;
+width:50%;
 }
 
 #button_checkout{
